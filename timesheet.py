@@ -43,7 +43,7 @@ def do():
 			month = Month.query.filter_by(id = month_id).first()
 			if month:
 				session['month'] = month_id
-		if action in ["save_timesheet" ,"edit_timesheet"]:
+		if action in ["save_timesheet" ,"edit_timesheet", "delete_timesheet"]:
 			timesheet_id = request.form.get('timesheet')
 			ts = Timesheet.query.filter_by(id = timesheet_id).first()
 		if action in ["edit_timesheet"] and ts:
@@ -60,10 +60,10 @@ def do():
 			else:
 				ts = Timesheet(user, project, month, days)
 			db.session.add(ts)
-			print(ts)
 			db.session.commit()
-			print(ts)
-		if action in ["get_month", "save_timesheet"]:
+		if action in ["delete_timesheet"]:
+			ts.delete()
+		if action in ["get_month", "save_timesheet", "delete_timesheet"]:
 			session['timesheet'] = None
 		session['action'] = action
 	return(redirect(url_for('home')))

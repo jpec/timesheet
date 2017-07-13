@@ -38,6 +38,10 @@ class Timesheet(db.Model):
 	def __repr__(self):
 		return("<Timesheet[%s] %s day(s)>" % (self.id, self.days))
 
+	def delete(self):
+		db.session.query(Timesheet).filter(Timesheet.id == self.id).delete(synchronize_session='evaluate')
+		db.session.commit()
+
 
 class Month(db.Model):
 	id = db.Column(db.Integer, primary_key=True)

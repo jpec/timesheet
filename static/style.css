@@ -60,6 +60,26 @@ a:hover {
 
 #page table th {
     background-color: #dc8100;
+    padding-left: 2%;
+    padding-right: 2%;
+}
+
+#page table td.days {
+    width: 0.1%;
+}
+
+#page table td.tools {
+    width: 0.1%;
+}
+
+#page table td.tools form {
+}
+
+#page table td.tools form input {
+    margin: 1%;
+    float: left;
+    width: 30px;
+    height: 30px;
 }
 
 #footer p {
