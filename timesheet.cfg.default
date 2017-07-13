@@ -1,0 +1,5 @@
+DEBUG = False
+TEMPLATES_AUTO_RELOAD = True
+SECRET_KEY = 'clé_privée_super_longue'
+SQLALCHEMY_DATABASE_URI = 'mysql://user:pass@localhost/timesheet'
+

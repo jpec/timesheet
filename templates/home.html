@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex, nofollow">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+    <!-- Android -->
+    <meta name="theme-color" content="#dc8100">
+    <!-- Windows Phone -->
+    <meta name="msapplication-navbutton-color" content="#dc8100">
+    <!-- iOS -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="#dc8100">
+    <!--<meta name="apple-mobile-web-app-capable" content="yes">-->
+    <!--<meta name="mobile-web-app-capable" content="yes">-->
+
+    <title>Timesheet</title>
+
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+    <link rel="shortcut icon" href="/static/favicon.png">
+    <link rel="icon" sizes="16x16 32x32 64x64" href="/static/favicon.png">
+    <link rel="icon" type="image/png" sizes="256x256" href="/static/favicon-256.png">
+    <link rel="apple-touch-icon" sizes="256x256" href="/static/favicon-256.png">
+    <link rel="apple-touch-icon" href="/static/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/static/style.css" />
+  </head>
+  <body data-controller="home" data-action="index">
+    <div id="menubar">
+      <h1><a href="/" title="Accueil">Timesheet</a></h1>
+      <p>{{user.name}} {% if user.admin %} <a href="/admin" title="Administration">#</a> {% endif %}<a href="/logout" title="Déconnexion">×</a></p>
+    </div>
+    <div id="page">
+      <h2>Imputations mensuelles</h2>
+      <form id="ts-month" action="/do" method="POST">
+	<input type="hidden" name="action" value="get_month" />
+	<select name="month" onchange="this.form.submit()" required>
+	  {% for m in user.get_open_months() %}
+	  <option value="{{m.id}}"{% if m.id == month.id %} selected{% endif %}>Mois : {{m.year}} / {{m.month}} : {{m.days}} jour(s) ouvré(s)</option>
+	  {% endfor %}
+	</select>
+      </form>
+      <form id="ts-user" action="/do" method="POST">
+	<input type="hidden" name="action" value="edit_timesheet" />
+	<table class="timesheet">
+	  <tr><th scope="col">Client</th><th scope="col">Projet</th><th scope="col">Jour(s)</th><th scope="col">Edit</th></tr>
+	  {% for t in user.get_timesheets_for_month(month) %}
+	  <tr>
+            <td>{{t.project.customer.name}}</td>
+            <td>{{t.project.name}}</td>
+            <td>{{t.days}}</td>
+            <td><input type="radio" name="timesheet" value="{{t.id}}"/></td>
+          </tr>
+	  {% endfor %}
+	</table>
+	<input type="submit" value="Éditer">
+      </form>
+      <h2>{% if ts %}Modifier{% else %}Ajouter{% endif %} imputation</h2>
+      <form id="save_timesheet" action="/do" method="POST">
+	{% if ts %}<input type="hidden" name="timesheet" value="{{ts.id}}" />{% endif %}
+	<input type="hidden" name="action" value="save_timesheet" />
+	<input type="hidden" name="month" value="{{month.id}}" />
+	<select name="project" required>
+	  {% for p in user.get_projects() %}
+	  <option value="{{p.id}}" {% if ts and ts.project.id == p.id %}selected{% endif %} >{{p.customer.name}} / {{p.name}}</option>
+	  {% endfor %}
+	</select>
+	<input name="days" type="number" step=0.5 size=3  min=0.0 max={{month.days}} value={% if ts %}{{ts.days}}{% else %}{{month.days}}{% endif %} required/>
+	<input type="submit" value="Enregistrer">
+      </form>
+    </div>
+    <div id="footer">
+      <p><a href="https://github.com/jpec/timesheet" title="Get timesheet!" >Timesheet v{{version}}</a> &copy; <a href="mailto:julien@peclu.net" title="Contact">Julien Pecqueur</a></p>
+    </div>
+  </body>
+</html>
