@@ -81,6 +81,12 @@
 	<input name="days" type="number" step=0.5 size=3	min=0.0 max={{month.days}} value={% if ts %}{{ts.days}}{% else %}{{month.days}}{% endif %} title="Nombre de jours d'imputation" required/>
 	<input type="submit" title="Enregistrer" value="Enregistrer">
       </form>
+			{% if ts %}
+      <form id="cancel_timesheet" action="/do" method="POST">
+	<input type="hidden" name="action" value="cancel_timesheet" />
+	<input type="submit" title="Annuler" value="Annuler">
+      </form>
+			{% endif %}
     </div>
     <div id="footer">
       <p><a href="https://github.com/jpec/timesheet" title="Get timesheet!" >Timesheet v{{version}}</a> &copy; <a href="mailto:julien@peclu.net" title="Contact">Julien Pecqueur</a></p>

@@ -63,7 +63,7 @@ def do():
 			db.session.commit()
 		if action in ["delete_timesheet"]:
 			ts.delete()
-		if action in ["get_month", "save_timesheet", "delete_timesheet"]:
+		if action in ["get_month", "save_timesheet", "delete_timesheet", "cancel_timesheet"]:
 			session['timesheet'] = None
 		session['action'] = action
 	return(redirect(url_for('home')))
