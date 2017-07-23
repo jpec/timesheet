@@ -32,6 +32,7 @@ def home():
 def admin():
 	user = session.get('user')
 	logged_in = session.get('logged_in')
+	print(user, logged_in)
 	user = User.query.filter_by(username=user).first()
 	if not logged_in or not user.admin:
 		session['admin'] = False
@@ -83,9 +84,9 @@ def do():
 			session['timesheet'] = None
 		session['action'] = action
 	if not session.get('admin'):
-		return(redirect(url_for('home'))
+		return(redirect(url_for('home')))
 	else:
-		return(redirect(url_for('admin'))
+		return(redirect(url_for('admin')))
 
 
 @app.route('/login', methods=['POST'])

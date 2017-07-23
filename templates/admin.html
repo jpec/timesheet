@@ -16,7 +16,7 @@
     <!--<meta name="apple-mobile-web-app-capable" content="yes">-->
     <!--<meta name="mobile-web-app-capable" content="yes">-->
 
-    <title>Timesheet, </title>
+    <title>Timesheet, dashboard</title>
 
     <!--[if lt IE 9]>
 	<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -33,11 +33,11 @@
   </head>
   <body data-controller="home" data-action="index">
     <div id="menubar">
-      <h1><a href="/" title="Accueil">Dashboard</a></h1>
+      <h1><a href="/" title="Accueil">Timesheet, dashboard</a></h1>
       <p>{{user.name}} <a href="/" title="Retour vue utilisateur">#</a> <a href="/logout" title="Déconnexion">×</a></p>
     </div>
     <div id="page">
-      <h2>Imputations mensuelles</h2>
+      <h2>Rapport mensuel</h2>
       <form id="ts-month" action="/do" method="POST">
 	<input type="hidden" name="action" value="get_month" />
 	<select title="Sélection du mois" name="month" onchange="this.form.submit()" required>
@@ -48,7 +48,7 @@
       </form>
       <table class="timesheet">
 	<tr><th scope="col">Client</th><th scope="col">Projet</th><th scope="col">Jour(s)</th><th scope="col">Actions</th></tr>
-	{% for t in user.get_timesheets_for_month(month) %}
+	{% for t in user.get_all_timesheets_for_month(month) %}
 	<tr>
 	  <td>{{t.project.customer.name}}</td>
 	  <td>{{t.project.name}}</td>
@@ -68,26 +68,7 @@
 	</tr>
 	{% endfor %}
       </table>
-      <h2>{% if ts %}Modifier{% else %}Ajouter{% endif %} imputation</h2>
-      <form id="save_timesheet" action="/do" method="POST">
-	{% if ts %}<input type="hidden" name="timesheet" value="{{ts.id}}" />{% endif %}
-	<input type="hidden" name="action" value="save_timesheet" />
-	<input type="hidden" name="month" value="{{month.id}}" />
-	<select name="project" title="Sélection du projet" required>
-	  {% for p in user.get_projects() %}
-	  <option value="{{p.id}}" {% if ts and ts.project.id == p.id %}selected{% endif %} >{{p.customer.name}} / {{p.name}}</option>
-	  {% endfor %}
-	</select>
-	<input name="days" type="number" step=0.5 size=3	min=0.0 max={{month.days}} value={% if ts %}{{ts.days}}{% else %}{{month.days}}{% endif %} title="Nombre de jours d'imputation" required/>
-	<input type="submit" title="Enregistrer" value="Enregistrer">
-      </form>
-			{% if ts %}
-      <form id="cancel_timesheet" action="/do" method="POST">
-	<input type="hidden" name="action" value="cancel_timesheet" />
-	<input type="submit" title="Annuler" value="Annuler">
-      </form>
-			{% endif %}
-    </div>
+
     <div id="footer">
       <p><a href="https://github.com/jpec/timesheet" title="Get timesheet!" >Timesheet v{{version}}</a> &copy; <a href="mailto:julien@peclu.net" title="Contact">Julien Pecqueur</a></p>
     </div>

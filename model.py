@@ -100,6 +100,9 @@ class User(db.Model):
 				r.append(t)
 		return(r)
 
+	def get_all_timesheets_for_month(self, month):
+		return(Timesheet.query.filter_by(month = month).all())
+
 
 class Project(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
