@@ -21,7 +21,7 @@ join_project_user = db.Table('joint_project_user', db.Model.metadata,
 
 class Timesheet(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	days = db.Column(db.Integer)
+	days = db.Column(db.Numeric(2,2))
 	project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
 	project = db.relationship("Project", back_populates="timesheets")
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -47,7 +47,7 @@ class Month(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	year = db.Column(db.Integer)
 	month = db.Column(db.Integer)
-	days = db.Column(db.Integer)
+	days = db.Column(db.Numeric(2,2))
 	closed = db.Column(db.Boolean)
 	timesheets = db.relationship("Timesheet", back_populates="month")
 
