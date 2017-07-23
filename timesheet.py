@@ -30,8 +30,24 @@ def home():
 
 @app.route('/admin')
 def admin():
-	#not implemented
-	return(redirect(url_for('home')))
+	user = session.get('user')
+	logged_in = session.get('logged_in')
+	user = User.query.filter_by(username=user).first()
+	if not logged_in or not user.admin:
+		session['admin'] = False
+		return(redirect(url_for('home')))
+	else:
+		session['admin'] = True
+		action = session.get('action')
+		month_id = session.get('month')
+		if month_id:
+			month = Month.query.filter_by(id = month_id).first()
+		else:
+			today = datetime.now()
+			month = Month.query.filter_by(year = today.year).filter_by(month = today.month).first()
+		timesheet_id = session.get('timesheet')
+		ts = Timesheet.query.filter_by(id = timesheet_id).first()
+		return(render_template('admin.html', user=user, version=VERSION, month=month, ts=ts))
 
 
 @app.route('/do', methods=['POST'])
@@ -66,7 +82,10 @@ def do():
 		if action in ["get_month", "save_timesheet", "delete_timesheet", "cancel_timesheet"]:
 			session['timesheet'] = None
 		session['action'] = action
-	return(redirect(url_for('home')))
+	if not session.get('admin'):
+		return(redirect(url_for('home'))
+	else:
+		return(redirect(url_for('admin'))
 
 
 @app.route('/login', methods=['POST'])
