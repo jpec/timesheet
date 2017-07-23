@@ -25,6 +25,7 @@ def home():
 			month = Month.query.filter_by(year = today.year).filter_by(month = today.month).first()
 		timesheet_id = session.get('timesheet')
 		ts = Timesheet.query.filter_by(id = timesheet_id).first()
+		session['admin'] = False
 		return(render_template('home.html', user=user, version=VERSION, month=month, ts=ts))
 
 
@@ -71,7 +72,7 @@ def do():
 			user = User.query.filter_by(username=session['user']).first()
 			project = Project.query.filter_by(id = project_id).first()
 			if ts:
-				ts.user = user
+				#ts.user = user #i must add user in form
 				ts.project = project
 				ts.days = days
 			else:
@@ -96,6 +97,7 @@ def login():
 	user = User.query.filter_by(username=username).first()
 	if user and user.check_password(password):
 		session['logged_in'] = True
+		session['admin'] = False
 		session['user'] = user.username
 	else:
 		flash('wrong password!')
@@ -105,6 +107,7 @@ def login():
 @app.route("/logout")
 def logout():
 	session['logged_in'] = False
+	session['admin'] = False
 	return(redirect(url_for('home')))
 
 
